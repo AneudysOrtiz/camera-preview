@@ -26,6 +26,8 @@ class CameraController: NSObject {
     
     var flashMode = AVCaptureDevice.FlashMode.off
     var photoCaptureCompletionBlock: ((UIImage?, Error?) -> Void)?
+
+    var shutterSound: Bool?
 }
 
 extension CameraController {
@@ -202,7 +204,8 @@ extension CameraController {
         captureSession.commitConfiguration()
     }
     
-    func captureImage(completion: @escaping (UIImage?, Error?) -> Void) {
+    func captureImage(shutterSound: Bool?, completion: @escaping (UIImage?, Error?) -> Void) {
+        self.shutterSound = shutterSound
         guard let captureSession = captureSession, captureSession.isRunning else { completion(nil, CameraControllerError.captureSessionIsMissing); return }
         let settings = AVCapturePhotoSettings()
         settings.flashMode = self.flashMode
@@ -367,6 +370,13 @@ extension CameraController: AVCapturePhotoCaptureDelegate {
             
         else {
             self.photoCaptureCompletionBlock?(nil, CameraControllerError.unknown)
+        }
+    }
+
+    func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        // dispose system shutter sound
+        if !self.shutterSound! {
+            AudioServicesDisposeSystemSoundID(1108)
         }
     }
 }

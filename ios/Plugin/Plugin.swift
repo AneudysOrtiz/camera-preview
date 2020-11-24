@@ -125,8 +125,9 @@ public class CameraPreview: CAPPlugin {
 
     @objc func capture(_ call: CAPPluginCall) {
         let quality: Int? = call.getInt("quality", 85)
+        let shutterSound: Bool? = call.getBool("shutterSound", true)
         
-        self.cameraController.captureImage { (image, error) in
+        self.cameraController.captureImage(shutterSound: shutterSound) { (image, error) in
 
             guard let image = image else {
                 print(error ?? "Image capture error")

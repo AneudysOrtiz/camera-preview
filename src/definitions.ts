@@ -30,6 +30,8 @@ export interface CameraPreviewOptions {
 export interface CameraPreviewPictureOptions {
   /** The picture quality, 0 - 100, default 85 */
   quality?: number;
+  /** Enable shutter sound, default true */
+  shutterSound?: boolean;
 }
 export type CameraPreviewFlashMode = 'off' | 'on' | 'auto' | 'red-eye' | 'torch';
 
